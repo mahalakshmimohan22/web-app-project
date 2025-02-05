@@ -53,7 +53,8 @@ body {
     font-size: clamp(2rem, 5vw, 70px);
     font-family: 'Roboto', sans-serif; 
     font-weight: 400; 
-    line-height: 1; 
+    line-height: 0.5; 
+    padding-top: 20px;
 }
 
 .home-display p {
@@ -63,14 +64,109 @@ body {
 }
 
 .carousel {
-    display: flex;
-    overflow: hidden;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the carousel */
+    padding: 0 30mm; /* Add same left and right padding as home-display and home-kitchen */
+    max-width: 810px; /* Adjust the maximum width to ensure all three cards are fully visible */
+    margin: 0 auto;
+}
+
+.carousel-track-container {
+    overflow: hidden;
+    width: 100%;
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease;
 }
 
 .carousel-item {
-    min-width: 100%;
-    transition: transform 0.5s ease;
+    min-width: 250px; /* Match the width of home-kitchen cards */
+    height: 350px; /* Match the height of home-kitchen cards */
+    margin: 0 3px; /* Adjust margin to fit three cards properly */
+    list-style: none;
+    transition: transform 0.3s ease;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.carousel-item img {
+    width: 100%;
+    height: 270px; /* Match the height of home-kitchen card images */
+    object-fit: cover;
+    border-bottom: 1px solid #ddd;
+    flex-shrink: 0;
+}
+
+.carousel-item-details {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.carousel-prev,
+.carousel-next {
+    background-color: #1AC073;
+    border: none;
+    color: white;
+    width: 50px; /* Increase the size */
+    height: 50px; /* Increase the size */
+    border-radius: 50%; /* Make them circular */
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-prev::before,
+.carousel-next::before {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    margin: auto; /* Center the triangle */
+}
+
+.carousel-prev::before {
+    border-width: 10px 15px 10px 0;
+    border-color: transparent white transparent transparent;
+}
+
+.carousel-next::before {
+    border-width: 10px 0 10px 15px;
+    border-color: transparent transparent transparent white;
+}
+
+.carousel-prev {
+    left: 1cm; /* Bring the left arrow closer to the cards */
+}
+
+.carousel-next {
+    right: 1cm; /* Bring the right arrow closer to the cards */
+}
+
+.carousel-prev:hover,
+.carousel-next:hover {
+    background-color: #F3BA00;
+}
+
+.carousel-item:hover {
+    transform: scale(1.05);
 }
 
 .carousel-controls {
@@ -106,11 +202,72 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    text-align: center; /* Align all sentences to the center */
+    padding: 20mm 30mm 40mm 30mm; /* Add 40mm padding to the bottom */
+    width: 1440px; /* Set the width */
+    height: 860px; /* Set the height */
+    margin: 0 auto; /* Center the section */
+    background: linear-gradient(to bottom, white 50%, aquamarine 50%); /* Apply gradient background */
 }
 
-.video-section video {
+.welcome {
+    font-weight: 700;
+    font-size: 5rem; /* Increase the size */
+    line-height: 50px; /* Adjust line height */
+    letter-spacing: 0.2px;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.away {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.video-container {
+    position: relative;
     width: 100%;
-    max-width: 600px;
+    max-width: 800px; /* Adjust the maximum width for medium size */
+    margin: 0 auto; /* Center the video */
+    padding-bottom: 20mm;
+}
+
+#promo-video {
+    width: 100%;
+    display: block;
+}
+
+.play-pause-btn {
+    background-color: #1AC073;
+    border: none;
+    color: white;
+    width: 50px; /* Increase the size */
+    height: 50px; /* Increase the size */
+    border-radius: 50%; /* Make it circular */
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.play-pause-btn::before {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    margin: auto; /* Center the triangle */
+    border-width: 10px 0 10px 15px;
+    border-color: transparent transparent transparent white;
+}
+
+.play-pause-btn:hover {
+    background-color: #F3BA00;
 }
 
 h1, h2 {
@@ -192,20 +349,36 @@ h1, h2 {
 }
 
 #home-kitchen {
-    padding: 20px 30mm; /* Add same left and right padding as home-display */
+    padding: 20mm 30mm; /* Add same left and right padding as home-display */
     background-color: #f9f9f9;
 }
 
 #home-kitchen h2 {
-    text-align: left;
-    font-family: 'Squada One', cursive;
+    text-align: center;
+    font-family: 'Roboto', sans-serif; 
     margin-bottom: 20px;
+    padding-left: 10px; /* Align with the cards */
+    font-size: 1.5rem;
+}
+
+#popular-items {
+    background-color: #f9f9f9;
+    height: 50%; /* Reduce height by 1cm */
+    width: 100%;
+    align-content: center;
+}
+
+#popular-items h2 {
+    text-align: center; /* Center the heading */
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.5rem;
 }
 
 .card-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 20px;
+    justify-content: center; /* Center the container */
 }
 
 .card {
@@ -215,14 +388,34 @@ h1, h2 {
     overflow: hidden;
     text-align: center;
     padding: 10px;
-    max-width: 250px; /* Set a max-width for the cards */
+    width: 250px; /* Set a fixed width for the cards */
+    height: 350px; /* Set a fixed height for the cards */
     margin: 0 auto; /* Center the cards */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .card img {
     width: 100%;
-    height: auto;
+    height: 270px; /* Set a fixed height for the image to make it square */
+    object-fit: cover; /* Ensure the image covers the area */
     border-bottom: 1px solid #ddd;
+    flex-shrink: 0; /* Prevent the image from shrinking */
+}
+
+.card-details, .card-icons {
+    flex-shrink: 0; /* Prevent the details and icons from shrinking */
+}
+
+.card img[onerror] {
+    background-color: #f0f0f0; /* Light grey background for placeholder */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888; /* Grey color for text */
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
 }
 
 .card-details {
@@ -237,27 +430,77 @@ h1, h2 {
 }
 
 .food-price {
-    color: #1AC073;
+    color: #000000;
 }
 
 .card-icons {
     display: flex;
     justify-content: space-between;
-    padding: 10px;
+    align-items: center; /* Align items horizontally */
+    padding: 5px;
     font-family: 'Roboto', sans-serif;
+    margin-bottom: 30px; 
 }
 
 .rating {
-    color: #FFD700;
+    color: rgb(0, 0, 0);
 }
 
 .delivery-time {
-    color: #888;
+    color: black;
+    background-color: rgb(216, 214, 214);
+    border-radius: 3px;
+    width: 20mm;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the text */
+    font-size: 0.8rem; /* Reduce text size */
 }
 
 .add-icon {
-    color: #1AC073;
+    color: #ffffff;
     cursor: pointer;
+    background-color: #FFD700;
+    border-radius: 3px;
+    width: 5mm;
+    height: 5mm;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the text */
+}
+
+.request-dish-btn {
+    display: block;
+    margin: 20px auto 40mm auto; /* Add 40mm space below the button */
+    padding: 10px 20px;
+    background-color: #1AC073;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.request-dish-btn:hover {
+    background-color: #F3BA00;
+}
+
+.contact-section {
+    padding: 20mm 30mm; /* Add padding to the contact section */
+    text-align: center; /* Center the text */
+    background-color: #f9f9f9; /* Light background color */
+}
+
+.contact-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.contact-section p {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    margin-bottom: 20px;
 }
 
 @media (max-width: 768px) {
@@ -357,6 +600,8 @@ h1, h2 {
 
     .card-container {
         grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        justify-content: center; /* Center the container */
     }
 }
 
@@ -391,5 +636,7 @@ h1, h2 {
 
     .card-container {
         grid-template-columns: 1fr;
+        gap: 20px;
+        justify-content: center; /* Center the container */
     }
 }

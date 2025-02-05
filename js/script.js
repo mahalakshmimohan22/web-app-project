@@ -3,31 +3,68 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentIndex = 0;
     const items = document.querySelectorAll('.carousel-item');
     const totalItems = items.length;
+    const track = document.querySelector('.carousel-track');
+    const prevButton = document.querySelector('.carousel-prev');
+    const nextButton = document.querySelector('.carousel-next');
 
-    function showItem(index) {
-        items.forEach((item, i) => {
-            item.style.display = (i === index) ? 'block' : 'none';
-        });
+    // Clone first and last items for infinite scroll
+    const firstClone = items[0].cloneNode(true);
+    const lastClone = items[totalItems - 1].cloneNode(true);
+    track.appendChild(firstClone);
+    track.insertBefore(lastClone, items[0]);
+
+    // Set initial position to first actual item
+    currentIndex = 1;
+    
+    function updateCarousel(transition = true) {
+        const itemWidth = items[0].getBoundingClientRect().width;
+        if (!transition) {
+            track.style.transition = 'none';
+        } else {
+            track.style.transition = 'transform 0.3s ease-in-out';
+        }
+        track.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
     }
 
     function nextItem() {
-        currentIndex = (currentIndex + 1) % totalItems;
-        showItem(currentIndex);
+        if (currentIndex >= totalItems + 1) return;
+        currentIndex++;
+        updateCarousel();
+
+        // Reset to first item if we reached the clone
+        if (currentIndex === totalItems + 1) {
+            setTimeout(() => {
+                currentIndex = 1;
+                updateCarousel(false);
+            }, 300);
+        }
     }
 
     function prevItem() {
-        currentIndex = (currentIndex - 1 + totalItems) % totalItems;
-        showItem(currentIndex);
+        if (currentIndex <= 0) return;
+        currentIndex--;
+        updateCarousel();
+
+        // Reset to last item if we reached the clone
+        if (currentIndex === 0) {
+            setTimeout(() => {
+                currentIndex = totalItems;
+                updateCarousel(false);
+            }, 300);
+        }
     }
+
+    prevButton.addEventListener('click', prevItem);
+    nextButton.addEventListener('click', nextItem);
+
+    // Initialize carousel
+    updateCarousel(false);
 
     const hamburger = document.querySelector('.hamburger');
 
     hamburger.addEventListener('click', () => {
         hamburger.classList.toggle('active');
     });
-
-    document.querySelector('.carousel-next').addEventListener('click', nextItem);
-    document.querySelector('.carousel-prev').addEventListener('click', prevItem);
 
     // Modal functionality
     const cartModal = document.getElementById('cartModal');
@@ -63,19 +100,24 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Video play/pause functionality
-    const video = document.getElementById('video');
+    const video = document.getElementById('promo-video');
     const playPauseBtn = document.querySelector('.play-pause-btn');
 
     playPauseBtn.addEventListener('click', function() {
         if (video.paused) {
             video.play();
-            playPauseBtn.textContent = 'Pause';
+            playPauseBtn.style.display = 'none';
         } else {
             video.pause();
-            playPauseBtn.textContent = 'Play';
+            playPauseBtn.style.display = 'flex';
         }
     });
 
-    // Initialize carousel
-    showItem(currentIndex);
+    video.addEventListener('pause', function() {
+        playPauseBtn.style.display = 'flex';
+    });
+
+    video.addEventListener('play', function() {
+        playPauseBtn.style.display = 'none';
+    });
 });

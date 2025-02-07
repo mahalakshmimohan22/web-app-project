@@ -1,83 +1,90 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Carousel functionality
-    let currentIndex = 1; // Start with the second item as the active item
-    const items = document.querySelectorAll('.carousel-item');
-    const totalItems = items.length;
-    const track = document.querySelector('.carousel-track');
-    const prevButton = document.querySelector('.carousel-prev');
-    const nextButton = document.querySelector('.carousel-next');
-    const dotsContainer = document.createElement('div');
-    dotsContainer.classList.add('carousel-pagination');
-    document.querySelector('.carousel').appendChild(dotsContainer);
-
-    // Clone first and last items for infinite effect
-    const firstClone = items[0].cloneNode(true);
-    const lastClone = items[totalItems - 1].cloneNode(true);
-    track.appendChild(firstClone);
-    track.insertBefore(lastClone, items[0]);
-
-    const dots = [];
-
-    // Create dots for pagination
-    items.forEach((item, index) => {
-        const dot = document.createElement('div');
-        dot.classList.add('carousel-dot');
-        if (index === currentIndex) dot.classList.add('active');
-        dot.addEventListener('click', () => goToSlide(index));
-        dotsContainer.appendChild(dot);
-        dots.push(dot);
-    });
-
-    function updateCarousel() {
-        items.forEach((item, index) => {
-            item.classList.remove('active');
-            dots[index].classList.remove('active');
-        });
-        items[currentIndex].classList.add('active');
-        dots[currentIndex].classList.add('active');
-        track.style.transform = `translateX(-${(currentIndex + 1) * 33.33}%)`; // Adjust for 3 items and clones
+  const track = document.querySelector('.carousel-track');
+  const trackContainer = document.querySelector('.carousel-track-container');
+  const prevButton = document.querySelector('.carousel-prev');
+  const nextButton = document.querySelector('.carousel-next');
+  
+  // Number of cards visible at one time:
+  const itemsToShow = 3;
+  
+  // Get the original list of items (as an array)
+  const originalItems = Array.from(track.children);
+  const totalOriginal = originalItems.length;
+  
+  // Clone the last 3 and first 3 for infinite scrolling
+  const clonesBefore = originalItems.slice(-itemsToShow).map(item => item.cloneNode(true));
+  const clonesAfter  = originalItems.slice(0, itemsToShow).map(item => item.cloneNode(true));
+  
+  // Prepend clonesBefore
+  clonesBefore.forEach(clone => {
+    track.insertBefore(clone, track.firstChild);
+  });
+  
+  // Append clonesAfter
+  clonesAfter.forEach(clone => {
+    track.appendChild(clone);
+  });
+  
+  // Start at index equal to the number of prepended clones.
+  let currentIndex = clonesBefore.length;
+  let isTransitioning = false;
+  
+  // This function calculates item width (they are all the same) and sets the translateX
+  function updateTrackPosition(animate = true) {
+    // Get width from one item – note that on resize this will be updated
+    const itemWidth = track.children[currentIndex].offsetWidth;
+    // Optionally disable transition for instant repositioning
+    track.style.transition = animate ? 'transform 0.5s ease' : 'none';
+    track.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+    
+    // Update the “active” (center) card. With 3 visible cards, the center is currentIndex+1.
+    Array.from(track.children).forEach(item => item.classList.remove('active'));
+    const centerIndex = currentIndex + 1;
+    if (track.children[centerIndex]) {
+      track.children[centerIndex].classList.add('active');
     }
-
-    function nextItem() {
-        currentIndex++;
-        if (currentIndex >= totalItems) {
-            currentIndex = 0;
-            track.style.transition = 'none';
-            track.style.transform = `translateX(-${(currentIndex + 1) * 33.33}%)`;
-            setTimeout(() => {
-                track.style.transition = 'transform 0.5s ease';
-                updateCarousel();
-            }, 0);
-        } else {
-            updateCarousel();
-        }
+  }
+  
+  // Set initial position (no animation)
+  updateTrackPosition(false);
+  
+  // After a transition ends, check if we need to “jump” without animation.
+  track.addEventListener('transitionend', () => {
+    isTransitioning = false;
+    
+    // When moving forward past the real items, jump back to the beginning.
+    if (currentIndex >= clonesBefore.length + totalOriginal) {
+      currentIndex = clonesBefore.length;
+      updateTrackPosition(false);
     }
-
-    function prevItem() {
-        currentIndex--;
-        if (currentIndex < 0) {
-            currentIndex = totalItems - 1;
-            track.style.transition = 'none';
-            track.style.transform = `translateX(-${(currentIndex + 1) * 33.33}%)`;
-            setTimeout(() => {
-                track.style.transition = 'transform 0.5s ease';
-                updateCarousel();
-            }, 0);
-        } else {
-            updateCarousel();
-        }
+    // When moving backward before the first real item, jump to the end.
+    if (currentIndex < clonesBefore.length) {
+      currentIndex = clonesBefore.length + totalOriginal - 1;
+      updateTrackPosition(false);
     }
-
-    function goToSlide(index) {
-        currentIndex = index;
-        updateCarousel();
-    }
-
-    prevButton.addEventListener('click', prevItem);
-    nextButton.addEventListener('click', nextItem);
-
-    // Initialize carousel
-    updateCarousel();
+  });
+  
+  // Next button – slide one card to the left
+  nextButton.addEventListener('click', () => {
+    if (isTransitioning) return;
+    isTransitioning = true;
+    currentIndex++;
+    updateTrackPosition();
+  });
+  
+  // Prev button – slide one card to the right
+  prevButton.addEventListener('click', () => {
+    if (isTransitioning) return;
+    isTransitioning = true;
+    currentIndex--;
+    updateTrackPosition();
+  });
+  
+  // Recalculate position on window resize (in case widths have changed)
+  window.addEventListener('resize', () => {
+    updateTrackPosition(false);
+  });
 
     const hamburger = document.querySelector('.hamburger');
 

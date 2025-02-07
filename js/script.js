@@ -1,64 +1,83 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Carousel functionality
-    let currentIndex = 0;
+    let currentIndex = 1; // Start with the second item as the active item
     const items = document.querySelectorAll('.carousel-item');
     const totalItems = items.length;
     const track = document.querySelector('.carousel-track');
     const prevButton = document.querySelector('.carousel-prev');
     const nextButton = document.querySelector('.carousel-next');
+    const dotsContainer = document.createElement('div');
+    dotsContainer.classList.add('carousel-pagination');
+    document.querySelector('.carousel').appendChild(dotsContainer);
 
-    // Clone first and last items for infinite scroll
+    // Clone first and last items for infinite effect
     const firstClone = items[0].cloneNode(true);
     const lastClone = items[totalItems - 1].cloneNode(true);
     track.appendChild(firstClone);
     track.insertBefore(lastClone, items[0]);
 
-    // Set initial position to first actual item
-    currentIndex = 1;
-    
-    function updateCarousel(transition = true) {
-        const itemWidth = items[0].getBoundingClientRect().width;
-        if (!transition) {
-            track.style.transition = 'none';
-        } else {
-            track.style.transition = 'transform 0.3s ease-in-out';
-        }
-        track.style.transform = `translateX(-${currentIndex * itemWidth}px)`;
+    const dots = [];
+
+    // Create dots for pagination
+    items.forEach((item, index) => {
+        const dot = document.createElement('div');
+        dot.classList.add('carousel-dot');
+        if (index === currentIndex) dot.classList.add('active');
+        dot.addEventListener('click', () => goToSlide(index));
+        dotsContainer.appendChild(dot);
+        dots.push(dot);
+    });
+
+    function updateCarousel() {
+        items.forEach((item, index) => {
+            item.classList.remove('active');
+            dots[index].classList.remove('active');
+        });
+        items[currentIndex].classList.add('active');
+        dots[currentIndex].classList.add('active');
+        track.style.transform = `translateX(-${(currentIndex + 1) * 33.33}%)`; // Adjust for 3 items and clones
     }
 
     function nextItem() {
-        if (currentIndex >= totalItems + 1) return;
         currentIndex++;
-        updateCarousel();
-
-        // Reset to first item if we reached the clone
-        if (currentIndex === totalItems + 1) {
+        if (currentIndex >= totalItems) {
+            currentIndex = 0;
+            track.style.transition = 'none';
+            track.style.transform = `translateX(-${(currentIndex + 1) * 33.33}%)`;
             setTimeout(() => {
-                currentIndex = 1;
-                updateCarousel(false);
-            }, 300);
+                track.style.transition = 'transform 0.5s ease';
+                updateCarousel();
+            }, 0);
+        } else {
+            updateCarousel();
         }
     }
 
     function prevItem() {
-        if (currentIndex <= 0) return;
         currentIndex--;
-        updateCarousel();
-
-        // Reset to last item if we reached the clone
-        if (currentIndex === 0) {
+        if (currentIndex < 0) {
+            currentIndex = totalItems - 1;
+            track.style.transition = 'none';
+            track.style.transform = `translateX(-${(currentIndex + 1) * 33.33}%)`;
             setTimeout(() => {
-                currentIndex = totalItems;
-                updateCarousel(false);
-            }, 300);
+                track.style.transition = 'transform 0.5s ease';
+                updateCarousel();
+            }, 0);
+        } else {
+            updateCarousel();
         }
+    }
+
+    function goToSlide(index) {
+        currentIndex = index;
+        updateCarousel();
     }
 
     prevButton.addEventListener('click', prevItem);
     nextButton.addEventListener('click', nextItem);
 
     // Initialize carousel
-    updateCarousel(false);
+    updateCarousel();
 
     const hamburger = document.querySelector('.hamburger');
 
@@ -68,34 +87,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Modal functionality
     const cartModal = document.getElementById('cartModal');
-    const dishModal = document.getElementById('dishModal');
-    const cartBtn = document.querySelector('.cart-btn');
-    const dishRequestBtn = document.querySelector('.dish-request-btn');
+    const requestDishModal = document.getElementById('requestDishModal');
+    const cartBtn = document.querySelector('.bag-action');
+    const requestDishBtn = document.querySelector('.request-dish-btn');
     const closeCartModal = document.querySelector('.close-cart');
-    const closeDishModal = document.querySelector('.close-dish');
+    const closeRequestDishModal = document.querySelector('.close-request-dish');
+    const backToMenuBtn = document.querySelector('.back-to-menu-btn');
+    const cancelRequestBtn = document.querySelector('.cancel-request-btn');
 
     cartBtn.addEventListener('click', function() {
         cartModal.style.display = 'block';
     });
 
-    dishRequestBtn.addEventListener('click', function() {
-        dishModal.style.display = 'block';
+    requestDishBtn.addEventListener('click', function() {
+        requestDishModal.style.display = 'block';
     });
 
     closeCartModal.addEventListener('click', function() {
         cartModal.style.display = 'none';
     });
 
-    closeDishModal.addEventListener('click', function() {
-        dishModal.style.display = 'none';
+    closeRequestDishModal.addEventListener('click', function() {
+        requestDishModal.style.display = 'none';
+    });
+
+    backToMenuBtn.addEventListener('click', function() {
+        cartModal.style.display = 'none';
+    });
+
+    cancelRequestBtn.addEventListener('click', function() {
+        requestDishModal.style.display = 'none';
     });
 
     window.addEventListener('click', function(event) {
         if (event.target === cartModal) {
             cartModal.style.display = 'none';
         }
-        if (event.target === dishModal) {
-            dishModal.style.display = 'none';
+        if (event.target === requestDishModal) {
+            requestDishModal.style.display = 'none';
         }
     });
 
@@ -106,10 +135,8 @@ document.addEventListener('DOMContentLoaded', function() {
     playPauseBtn.addEventListener('click', function() {
         if (video.paused) {
             video.play();
-            playPauseBtn.style.display = 'none';
         } else {
             video.pause();
-            playPauseBtn.style.display = 'flex';
         }
     });
 
@@ -120,4 +147,6 @@ document.addEventListener('DOMContentLoaded', function() {
     video.addEventListener('play', function() {
         playPauseBtn.style.display = 'none';
     });
+
+    playPauseBtn.style.display = 'flex'; // Ensure the button is visible initially
 });

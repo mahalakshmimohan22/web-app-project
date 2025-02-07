@@ -71,29 +71,43 @@ body {
     padding: 0 30mm; /* Add same left and right padding as home-display and home-kitchen */
     max-width: 810px; /* Adjust the maximum width to ensure all three cards are fully visible */
     margin: 0 auto;
+    overflow: hidden; /* Hide overflow */
+    height: 450px; /* Fixed height */
 }
 
 .carousel-track-container {
     overflow: hidden;
     width: 100%;
+    height: 100%; /* Fixed height */
 }
 
 .carousel-track {
     display: flex;
     transition: transform 0.5s ease;
+    gap: 0.7cm;
+    height: 100%; /* Fixed height */
+    will-change: transform; /* Optimize for smooth transitions */
 }
 
 .carousel-item {
-    min-width: 250px; /* Match the width of home-kitchen cards */
-    height: 350px; /* Match the height of home-kitchen cards */
-    margin: 0 3px; /* Adjust margin to fit three cards properly */
+    min-width: 33.33%; /* Show 3 items */
+    height: 100%; /* Fixed height */
     list-style: none;
-    transition: transform 0.3s ease;
-    background-color: white;
+    transition: transform 0.3s ease, opacity 0.5s ease-in-out; /* Fade-in and fade-out effect */
+    opacity: 0.5; /* Start semi-transparent */
+    position: relative; /* Position relative for fade effect */
+    top: 0;
+    left: 0;
+    background-color: white; /* Default background color */
+    flex-shrink: 0; /* Prevent shrinking */
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     text-align: center;
+    padding: 10px;
+    width: 250px; /* Set a fixed width for the cards */
+    height: 350px; /* Set a fixed height for the cards */
+    margin: 0 auto; /* Center the cards */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -101,10 +115,24 @@ body {
 
 .carousel-item img {
     width: 100%;
-    height: 270px; /* Match the height of home-kitchen card images */
+    height: 270px; /* Set a fixed height for the image to make it square */
     object-fit: cover;
     border-bottom: 1px solid #ddd;
     flex-shrink: 0;
+}
+
+.carousel-item-details, .card-icons {
+    flex-shrink: 0;
+}
+
+.carousel-item img[onerror] {
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
 }
 
 .carousel-item-details {
@@ -112,6 +140,57 @@ body {
     justify-content: space-between;
     padding: 10px;
     font-family: 'Roboto', sans-serif;
+}
+
+.food-name {
+    font-weight: bold;
+}
+
+.food-price {
+    color: #000000;
+}
+
+.card-icons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: 30px; 
+}
+
+.rating {
+    color: rgb(0, 0, 0);
+}
+
+.delivery-time {
+    color: black;
+    background-color: rgb(216, 214, 214);
+    border-radius: 3px;
+    width: 20mm;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+}
+
+.add-icon {
+    color: #ffffff;
+    cursor: pointer;
+    background-color: #FFD700;
+    border-radius: 3px;
+    width: 5mm;
+    height: 5mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carousel-item.active {
+    opacity: 1; /* Show active slide */
+    transform: scale(1.1); /* Highlight active slide */
+    z-index: 1; /* Bring active slide to front */
 }
 
 .carousel-prev,
@@ -126,7 +205,7 @@ body {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 1;
+    z-index: 2; /* Ensure buttons are above slides */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -177,27 +256,6 @@ body {
     justify-content: space-between;
 }
 
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgb(0,0,0);
-    background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
-
 .video-section {
     display: flex;
     flex-direction: column;
@@ -205,9 +263,9 @@ body {
     text-align: center; /* Align all sentences to the center */
     padding: 20mm 30mm 40mm 30mm; /* Add 40mm padding to the bottom */
     width: 1440px; /* Set the width */
-    height: 860px; /* Set the height */
+    height: 860px; /* Increase the height */
     margin: 0 auto; /* Center the section */
-    background: linear-gradient(to bottom, white 50%, aquamarine 50%); /* Apply gradient background */
+    background: linear-gradient(to bottom, white 60%, #C7EACC 40%); /* Apply gradient background */
 }
 
 .welcome {
@@ -231,6 +289,11 @@ body {
     max-width: 800px; /* Adjust the maximum width for medium size */
     margin: 0 auto; /* Center the video */
     padding-bottom: 20mm;
+    height: 10cm;
+}
+
+.video-bg {
+    height: 20cm;
 }
 
 #promo-video {
@@ -362,8 +425,8 @@ h1, h2 {
 }
 
 #popular-items {
-    background-color: #f9f9f9;
-    height: 50%; /* Reduce height by 1cm */
+    background-color: #ffffff;
+    height: 18cm; /* Reduce height by 1cm */
     width: 100%;
     align-content: center;
 }
@@ -377,7 +440,7 @@ h1, h2 {
 .card-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 50px;
     justify-content: center; /* Center the container */
 }
 
@@ -487,7 +550,7 @@ h1, h2 {
 }
 
 .contact-section {
-    padding: 20mm 30mm; /* Add padding to the contact section */
+    padding: 30mm 30mm; /* Increase padding to make the section taller */
     text-align: center; /* Center the text */
     background-color: #f9f9f9; /* Light background color */
 }
@@ -501,6 +564,206 @@ h1, h2 {
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     margin-bottom: 20px;
+}
+
+.contact-form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.contact-form-container h2,
+.contact-form-container p {
+    text-align: center;
+}
+
+.input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.input-row input {
+    width: 50%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+}
+
+textarea {
+    width: 96.5%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+    margin-bottom: 10px;
+    height: 5cm;
+}
+
+.submit-btn {
+    display: block;
+    width: 4cm;
+    padding: 10px;
+    background-color: #1AC073;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background-color: #F3BA00;
+}
+
+.contact-image-container {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.contact-image-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.contact-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5mm 30mm; /* Add padding similar to home-display */
+    height: 18cm;
+}
+
+.contact-form-container,
+.contact-image-container {
+    flex: 1;
+    margin: 0 10mm; /* Add margin to separate the two divisions */
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.modal h2{
+    font-family: 'Roboto', sans-serif;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    height: 70%;
+    width: 50%; /* Could be more or less, depending on screen size */
+    text-align: left; /* Align contents to the left */
+    align-items: center;
+}
+
+.modal-content h2 {
+    text-align: center; /* Center the heading */
+    width: 100%; /* Full width */
+}
+
+.cart-info{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 2.5cm;
+}
+
+.close-cart, .close-request-dish {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-cart:hover, .close-cart:focus, .close-request-dish:hover, .close-request-dish:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.cart-icon {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 20px;
+}
+
+.back-to-menu-btn, .cancel-request-btn, .submit-request-btn {
+    background-color: #1AC073;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.back-to-menu-btn:hover, .cancel-request-btn:hover, .submit-request-btn:hover {
+    background-color: #F3BA00;
+    width: 5cm;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: center; /* Center the buttons */
+    margin-top: 20px;
+    gap: 10px; /* Add gap between buttons */
+    width: 100%; /* Full width */
+}
+
+.modal-buttons .cancel-request-btn,
+.modal-buttons .submit-request-btn {
+    width: 5cm; /* Set equal width for both buttons */
+}
+
+.modal-buttons .cancel-request-btn {
+    background-color: white; /* White background */
+    color: #1AC073; /* Green text */
+    border: 1px solid #1AC073; /* Green border */
+}
+
+.modal-buttons .cancel-request-btn:hover {
+    background-color: #f0f0f0; /* Light grey background on hover */
+}
+
+.modal form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align labels to the left */
+    padding: 0 20px; /* Add padding for uniform appearance */
+}
+
+.modal form label {
+    margin-top: 10px;
+    font-family: 'Roboto', sans-serif;
+    width: 100%; /* Full width */
+}
+
+.modal form input {
+    width: 100%; /* Full width */
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.dish-form{
+    padding-top: 4cm;
 }
 
 @media (max-width: 768px) {
@@ -602,6 +865,16 @@ h1, h2 {
         grid-template-columns: repeat(2, 1fr);
         gap: 20px;
         justify-content: center; /* Center the container */
+    }
+
+    .contact-content {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .contact-form-container,
+    .contact-image-container {
+        margin: 10px 0;
     }
 }
 

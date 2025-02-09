@@ -285,7 +285,7 @@
             </div>
             <button class="carousel-next"></button>
         </div>
-        <button class="request-dish-btn">Request Dish</button> <!-- Add Request Dish button -->
+        <button class="request-dish-btn">Request Dish</button> 
     </section>
     <section id="video-section" style="text-align: center; background: linear-gradient(to bottom, white 50%, #C7EACC 50%);">
         <div class="video-bg">
@@ -293,11 +293,11 @@
             <p class="away">Away from home and craving the tasty homemade recipes?<br>
             Choose from a selection of our delicious home cooked dishes</p>
             <div class="video-container">
-                <video id="promo-video" width="600">
+                <video id="promo-video">
                     <source src="assets/Video 1.mp4" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
-                <button class="play-pause-btn" onclick="document.getElementById('promo-video').play()"></button>
+                <button class="play-pause-btn" controls></button>
             </div>
         </div>
     </section>
@@ -320,6 +320,21 @@
             </div>
         </div>
     </section>
+    <footer class="footer">
+        <div class="footer-brand">JTG eats</div>
+        <ul class="footer-nav">
+            <li class="nav-item">Home</li>
+            <li class="nav-item">About</li>
+            <li class="nav-item">Menu</li>
+            <li class="nav-item">Blog</li>
+            <li class="nav-item">Contact</li>
+        </ul>
+        <div class="footer-actions">
+            <img class="facebook-action" src="assets/Facebook.svg" alt="Facebook">
+            <img class="instagram-action" src="assets/Instagram.svg" alt="Instagram">
+        </div>
+        <hr class="footer-line">
+    </footer>
     <div id="cartModal" class="modal">
         <div class="modal-content">
             <span class="close-cart">&times;</span>
